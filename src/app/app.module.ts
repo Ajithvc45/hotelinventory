@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
+import { InitService } from './init.service';
+import { RequestInterceptor } from './request.interceptor';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,7 +14,11 @@ import { HeaderComponent } from './header/header.component';
 import { ContainerComponent } from './container/container.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { APP_CONFIG, APP_SERVICE_CONFIG } from './AppConfig/appconfig.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+function initFactory(initService: InitService) {
+  return () => initService.init();
+}
 @NgModule({
   declarations: [
                   AppComponent,
@@ -22,11 +28,22 @@ import { APP_CONFIG, APP_SERVICE_CONFIG } from './AppConfig/appconfig.service';
                   ContainerComponent,
                   EmployeeComponent
                 ],
-  imports: [BrowserModule, AppRoutingModule, CommonModule, NgbModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, CommonModule, NgbModule, HttpClientModule, BrowserAnimationsModule],
   providers: [
     {
       provide: APP_SERVICE_CONFIG,
       useValue: APP_CONFIG,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initFactory,
+      deps: [InitService],
+      multi: true,
     },
   ],
   bootstrap: [AppComponent],
