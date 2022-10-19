@@ -2,8 +2,9 @@
 <!-- Interpolation -->
 
 <hinv-header></hinv-header>
-<hinv-header></hinv-header>
-<hinv-header></hinv-header>
+<!-- <hinv-header></hinv-header>
+<hinv-header></hinv-header> -->
+<!-- {{ rooms$ | async | json }} -->
 
 <div [hidden]="hideRooms">
   Number of Rooms:
@@ -22,9 +23,13 @@
 <div>
     <button (click)="addRoom()">Add Room</button>
 </div>
+<h1>
+  <!-- {{ getError$ | async }} -->
+  Number of rooms: {{ roomsCount$ | async }}
+</h1>
 
-<div *ngIf="hideRooms">
-<hinv-rooms-list [rooms]="roomList" [title]="title" (selectedRoom)="selectRoom($event)"></hinv-rooms-list>
+<div *ngIf="rooms$ | async as rooms">
+<hinv-rooms-list [rooms]="rooms" [title]="title" (selectedRoom)="selectRoom($event)"></hinv-rooms-list>
 </div>
 
 <button (click)="toggle()">Toggle</button>

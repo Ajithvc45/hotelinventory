@@ -10,7 +10,7 @@ import { AfterViewInit,
          SkipSelf} from '@angular/core';
 import { Room, RoomList } from './rooms';
 import { RoomsService } from './services/rooms.service';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, Subject, Subscription } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 
 @Component({
@@ -50,6 +50,24 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
 
   totalBytes = 0;
 
+  subscription ! : Subscription;
+
+  error$ = new Subject<string>();
+
+  getError$ = this.error$.asObservable();
+
+  rooms$ = this.roomsService.getRooms$.pipe(
+    catchError((err) => { 
+      // console.log(err);
+      this.error$.next(err.message);
+      return of([]);
+    })
+  );
+
+  roomsCount$ = this.roomsService.getRooms$.pipe(
+    map((rooms) => rooms.length)
+  )
+
   constructor(@SkipSelf() private roomsService: RoomsService) { }
 
   ngOnInit(): void {
@@ -57,12 +75,12 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
       next: (value) => console.log(value),
       complete: () => console.log('complete'),
       error: (err) => console.log(err)
-    })
+    });
 
     this.stream.subscribe((data) => console.log(data));
-    this.roomsService.getRooms$.subscribe(rooms => {
-      this.roomList = rooms;
-    })
+    // this.roomsService.getRooms$.subscribe(rooms => {
+    //   this.roomList = rooms;
+    // });
 
     this.roomsService.getPhotos().subscribe((event) => {
       switch (event.type) {
@@ -140,7 +158,13 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
   deleteRoom() {
     this.roomsService.delete('3').subscribe((data) => {
       this.roomList = data;
-    })
+    });
+  }
+
+  ngOnDestroy() {
+    if(this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
