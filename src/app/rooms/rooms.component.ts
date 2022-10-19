@@ -1,6 +1,17 @@
 import { HeaderComponent } from './../header/header.component';
-import { AfterViewInit, Component, DoCheck, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, 
+         Component,
+         DoCheck,
+         OnInit,
+         QueryList,
+         ViewChild,
+         ViewChildren,
+         OnDestroy, 
+         SkipSelf} from '@angular/core';
 import { Room, RoomList } from './rooms';
+import { RoomsService } from './services/rooms.service';
+import { Observable } from 'rxjs';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'hinv-rooms',
@@ -11,7 +22,7 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
 
   hotelName = "Hilton Hotel";
   numberOfRooms = 10;
-  hideRooms = false;
+  hideRooms = true;
   selectedRoom!: RoomList;
 
   rooms: Room = {
@@ -24,45 +35,54 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
 
   roomList: RoomList[] = [];
 
+  stream = new Observable<string>(observer => {
+    observer.next('user1');
+    observer.next('user2');
+    observer.next('user3');
+    observer.complete();
+  })
+
   @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
 
   @ViewChildren(HeaderComponent) headerChildrenComponent!: QueryList<HeaderComponent>;
 
-  constructor() { }
+  error: string = '';
+
+  totalBytes = 0;
+
+  constructor(@SkipSelf() private roomsService: RoomsService) { }
 
   ngOnInit(): void {
-    this.roomList = [
-      {
-        roomNumber: 1,
-        roomType: 'Deluxe Room',
-        amenities: 'Air Conditioner, Free Wi-Fi, TV, Bathroom, Kitchen',
-        price: 500,
-        photos: 'https://images.unsplash.com/photo-1455587734955-081b22074882?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-        checkinTime: new Date('17-Oct-2022'),
-        checkoutTime: new Date('18-Oct-2022'),
-        rating: 4.5
-      },
-      {
-        roomNumber: 2,
-        roomType: 'Deluxe Room',
-        amenities: 'Air Conditioner, Free Wi-Fi, TV, Bathroom, Kitchen',
-        price: 1000,
-        photos: 'https://images.unsplash.com/photo-1455587734955-081b22074882?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-        checkinTime: new Date('17-Oct-2022'),
-        checkoutTime: new Date('18-Oct-2022'),
-        rating: 3.4
-      },
-      {
-        roomNumber: 3,
-        roomType: 'Private suite',
-        amenities: 'Air Conditioner, Free Wi-Fi, TV, Bathroom, Kitchen',
-        price: 15000,
-        photos: 'https://images.unsplash.com/photo-1455587734955-081b22074882?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-        checkinTime: new Date('17-Oct-2022'),
-        checkoutTime: new Date('18-Oct-2022'),
-        rating: 2.6
+    this.stream.subscribe({
+      next: (value) => console.log(value),
+      complete: () => console.log('complete'),
+      error: (err) => console.log(err)
+    })
+
+    this.stream.subscribe((data) => console.log(data));
+    this.roomsService.getRooms$.subscribe(rooms => {
+      this.roomList = rooms;
+    })
+
+    this.roomsService.getPhotos().subscribe((event) => {
+      switch (event.type) {
+        case HttpEventType.Sent: {
+          console.log('Request has been made!');
+          break;
+        }
+        case HttpEventType.ResponseHeader: {
+          console.log('Response success ');
+          break;
+        }
+        case HttpEventType.DownloadProgress: {
+          this.totalBytes+= event.loaded;
+          break;
+        }
+        case HttpEventType.Response: {
+          console.log(event.body);
+        }
       }
-    ]
+    })
   }
 
   ngDoCheck() {
@@ -85,7 +105,7 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
 
   addRoom() {
     const room: RoomList = {
-      roomNumber: 4,
+      roomNumber: '4',
         roomType: 'Deluxe Room',
         amenities: 'Air Conditioner, Free Wi-Fi, TV, Bathroom, Kitchen',
         price: 500,
@@ -95,7 +115,32 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
         rating: 4.5
     };
     // this.roomList.push(room);
-    this.roomList = [...this.roomList, room];
+    // this.roomList = [...this.roomList, room];
+    this.roomsService.addRoom(room).subscribe((data)=> {
+      this.roomList = data;
+    })
+  }
+
+  editRoom() {
+    const room: RoomList = {
+      roomNumber: '3',
+        roomType: 'Deluxe Room',
+        amenities: 'Air Conditioner, Free Wi-Fi, TV, Bathroom, Kitchen',
+        price: 500,
+        photos: 'https://images.unsplash.com/photo-1455587734955-081b22074882?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+        checkinTime: new Date('17-Oct-2022'),
+        checkoutTime: new Date('18-Oct-2022'),
+        rating: 4.5
+    };
+    this.roomsService.editRoom(room).subscribe((data) => {
+      this.roomList = data;
+    });
+  }
+
+  deleteRoom() {
+    this.roomsService.delete('3').subscribe((data) => {
+      this.roomList = data;
+    })
   }
 
 }
