@@ -24,7 +24,8 @@
     <td>{{ room.checkinTime | date : 'dd/mm/yyyy' }}</td>    <!-- datepipe -->
     <td>{{ room.rating | number }}</td>
     <td>
-        <button class="btn btn-primary" (click)="selectRoom(room)">Select</button>
+        <!-- <button class="btn btn-primary" (click)="selectRoom(room)">Select</button> -->
+        <button class="btn btn-primary" [routerLink]="['/rooms', room.roomNumber]">Book Room</button>
     </td>
   </tr>
 </table>

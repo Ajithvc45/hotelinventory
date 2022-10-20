@@ -1,12 +1,20 @@
+import { LoginComponent } from './login/login.component';
+import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
+import { NotfoundComponent } from './notfound/notfound.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RoomsBookingComponent } from './rooms/rooms-booking/rooms-booking.component';
 
 const routes: Routes = [
   {path:'employee', component: EmployeeComponent},
   {path:'rooms', component: RoomsComponent},
-  {path:'', redirectTo: '/rooms', pathMatch: 'full'}
+  {path: 'rooms/add', component: RoomsAddComponent},
+  {path: 'rooms/:roomid', component: RoomsBookingComponent},
+  {path: 'login', component: LoginComponent},
+  {path:'', redirectTo: '/rooms', pathMatch: 'full'},
+  {path: '**', component: NotfoundComponent}
 ];
 
 @NgModule({
