@@ -5,6 +5,7 @@ export interface Room {
 }
 
 export interface RoomList {
+  // Event?: string,
   roomNumber?: string;
   roomType: string;
   amenities: string;
