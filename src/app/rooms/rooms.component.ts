@@ -12,6 +12,7 @@ import { Room, RoomList } from './rooms';
 import { RoomsService } from './services/rooms.service';
 import { catchError, map, Observable, of, Subject, Subscription } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
+import { ConfigService } from '../services/config.service';
 
 @Component({
   selector: 'hinv-rooms',
@@ -68,7 +69,7 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
     map((rooms) => rooms.length)
   )
 
-  constructor(@SkipSelf() private roomsService: RoomsService) { }
+  constructor(@SkipSelf() private roomsService: RoomsService, private configService: ConfigService) { }
 
   ngOnInit(): void {
     this.stream.subscribe({

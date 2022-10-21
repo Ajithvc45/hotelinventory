@@ -1,4 +1,4 @@
-import { RoomsModule } from './rooms/rooms.module';
+// import { RoomsModule } from './rooms/rooms.module';
 import { InitService } from './init.service';
 import { RequestInterceptor } from './request.interceptor';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
@@ -26,6 +26,7 @@ import { LoginComponent } from './login/login.component';
 import { HoverDirective } from './hover.directive';
 import { EmailvalidatorDirective } from './emailvalidator/emailvalidator.directive';
 import { HeaderModule } from './header/header.module';
+import { RouteConfigToken } from './services/routeConfig.service';
 
 function initFactory(initService: InitService) {
   return () => initService.init();
@@ -43,7 +44,7 @@ function initFactory(initService: InitService) {
                 ],
   imports: [
     BrowserModule,
-    RoomsModule,
+    // RoomsModule,
     AppRoutingModule,
     CommonModule,
     NgbModule,
@@ -62,6 +63,10 @@ function initFactory(initService: InitService) {
     {
       provide: APP_SERVICE_CONFIG,
       useValue: APP_CONFIG,
+    },
+    {
+      provide: RouteConfigToken,
+      useValue: { title: 'Home' }
     },
     {
       provide: HTTP_INTERCEPTORS,
