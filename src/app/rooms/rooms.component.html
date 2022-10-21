@@ -19,9 +19,9 @@
 <div *ngIf="selectedRoom">
     {{ selectedRoom | json }}
 </div>
-
+<router-outlet></router-outlet>
 <div>
-    <button (click)="addRoom()">Add Room</button>
+    <button routerLink="add">Add Room</button>
 </div>
 <h1>
   <!-- {{ getError$ | async }} -->
@@ -41,3 +41,4 @@
 <h1>
   {{ totalBytes }} loaded
 </h1>
+

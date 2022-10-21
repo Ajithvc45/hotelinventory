@@ -1,3 +1,5 @@
+import { HeaderModule } from './../header/header.module';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +19,9 @@ import { RoomsBookingComponent } from './rooms-booking/rooms-booking.component';
   ],
   imports: [
     CommonModule,
-    RoomsRoutingModule
+    RoomsRoutingModule,
+    FormsModule,
+    HeaderModule,
   ]
 })
 export class RoomsModule { }
