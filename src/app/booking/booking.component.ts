@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ConfigService } from '../services/config.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class BookingComponent implements OnInit {
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
-  roomId: [''],
+  roomId: new FormControl({ value: '2', disabled: true }),
   guestEmail: [''],
   checkinDate: [''],
   checkoutDate: [''],
@@ -25,13 +25,21 @@ export class BookingComponent implements OnInit {
   bookingDate: [''],
   mobileNumber: [''],
   guestName: [''],
-  guestAddress: [''],
-  guestCity: [''],
-  guestState: [''],
-  guestCountry: [''],
-  guestZipCode: [''],
+  address: this.fb.group({
+    AddressLine1: [''],
+    AddressLine2: [''],
+    City: [''],
+    State: [''],
+    Country: [''],
+    ZipCode: [''],
+  }),
   guestCount: [''],
-    })
+    });
+  }
+
+  addBooking() {
+    console.log(this.bookingForm.getRawValue());
+    
   }
 
 }
