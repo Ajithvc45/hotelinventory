@@ -19,7 +19,35 @@ guestCountry: [''],
 guestZipCode: [''],
 guestCount: [''], -->
 
+<div>
+  <button mat-raised-button color="primary" type="button" (click)="addPassport()">Add Passport</button>
+</div>
+<div>
+  <button mat-raised-button color="primary" type="button" (click)="deletePassport()">Delete Passport</button>
+</div>
+
 <form [formGroup]="bookingForm" (ngSubmit)="addBooking()">
+  <mat-form-field *ngIf="bookingForm.get('passport')" class="example-full-width" >
+    <mat-label>Passport</mat-label>
+    <input
+      type="text"
+      matInput
+      formControlName="passport"
+      placeholder="Passport Number"
+    />
+    <!-- <mat-error
+      *ngIf="
+        emailFormControl.hasError('email') &&
+        !emailFormControl.hasError('required')
+      "
+    >
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="emailFormControl.hasError('required')">
+      Email is <strong>required</strong>
+    </mat-error> -->
+
+  </mat-form-field>
   <mat-form-field class="example-full-width" >
     <mat-label>Room Id</mat-label>
     <input
@@ -39,6 +67,7 @@ guestCount: [''], -->
     <mat-error *ngIf="emailFormControl.hasError('required')">
       Email is <strong>required</strong>
     </mat-error> -->
+
   </mat-form-field>
 
   <mat-form-field class="example-full-width">
@@ -84,7 +113,6 @@ guestCount: [''], -->
   <mat-form-field class="example-full-width">
     <mat-label>Checkin Date</mat-label>
     <input matInput [matDatepicker]="checkin" formControlName="checkinDate">
-    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
     <mat-datepicker-toggle matSuffix [for]="checkin"></mat-datepicker-toggle>
     <mat-datepicker #checkin></mat-datepicker>
   </mat-form-field>
@@ -92,7 +120,6 @@ guestCount: [''], -->
   <mat-form-field class="example-full-width">
     <mat-label>Checkout Date</mat-label>
     <input matInput [matDatepicker]="checkout" formControlName="checkoutDate">
-    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
     <mat-datepicker-toggle matSuffix [for]="checkout"></mat-datepicker-toggle>
     <mat-datepicker #checkout></mat-datepicker>
   </mat-form-field>
@@ -100,102 +127,9 @@ guestCount: [''], -->
   <mat-form-field class="example-full-width">
     <mat-label>Booking Date</mat-label>
     <input matInput [matDatepicker]="booking" formControlName="bookingDate">
-    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
     <mat-datepicker-toggle matSuffix [for]="booking"></mat-datepicker-toggle>
     <mat-datepicker #booking></mat-datepicker>
   </mat-form-field>
-
-  <!-- <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Room Id</mat-label>
-    <input
-      type="text"
-      matInput
-      formControlName="roomId"
-      placeholder="Room Id"
-    />
-  </mat-form-field> -->
-
   <div formGroupName="address">
     <mat-accordion class="example-headers-align" multi>
         <mat-expansion-panel>
@@ -261,6 +195,34 @@ guestCount: [''], -->
       
         </mat-expansion-panel>
       </mat-accordion>
+  </div>
+  <div>
+    <button mat-raised-button color="primary" type="button" (click)="addGuest()">Add Guest</button>
+  </div>
+  <div formArrayName="guests">
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Guests
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngFor="let guest of guests.controls; let i = index">
+          <div [formGroupName]="i">
+            <mat-form-field class="example-full-width">
+              <input type="text" matInput formControlName="guestName" placeholder="Guest Name">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input type="number" matInput formControlName="age" placeholder="Age">
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-raised-button color="primary" type="button" (click)="removeGuest(i)">Remove Guest</button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    
   </div>
   <div>
     <button mat-raised-button color="primary">Book Room</button>
