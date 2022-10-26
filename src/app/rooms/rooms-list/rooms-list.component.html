@@ -14,7 +14,8 @@
         Select Room
     </th>
   </tr>
-  <tr [ngClass]="e? 'even' : 'odd'" *ngFor="let room of rooms; let e = even; let o = odd; let i = index">
+  <tr [ngClass]="e? 'even' : 'odd'"
+  *ngFor="let room of rooms | filter : price; let e = even; let o = odd; let i = index">
     <td>{{ i | percent }}</td>             <!-- percentpipe -->
     <td>{{ e ? "Even" : "Odd" }}</td>
     <td>{{ room.roomNumber }}</td>
@@ -25,7 +26,7 @@
     <td>{{ room.rating | number }}</td>
     <td>
         <!-- <button class="btn btn-primary" (click)="selectRoom(room)">Select</button> -->
-        <button class="btn btn-primary" [routerLink]="['/rooms', room.roomNumber]">Book Room</button>
+        <button class="btn btn-primary" [routerLink]="['/booking', room.roomNumber]">Book Room</button>
     </td>
   </tr>
 </table>

@@ -13,6 +13,7 @@ import { RoomsService } from './services/rooms.service';
 import { catchError, map, Observable, of, Subject, Subscription } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { ConfigService } from '../services/config.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'hinv-rooms',
@@ -65,9 +66,9 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
     })
   );
 
-  roomsCount$ = this.roomsService.getRooms$.pipe(
-    map((rooms) => rooms.length)
-  )
+  priceFilter = new FormControl(0);
+
+  roomsCount$ = this.roomsService.getRooms$.pipe(map((rooms) => rooms.length))
 
   constructor(@SkipSelf() private roomsService: RoomsService, private configService: ConfigService) { }
 

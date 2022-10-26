@@ -3,6 +3,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { HttpClientModule } from '@angular/common/http';
+import {MatDialogModule} from '@angular/material/dialog';
+// import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import { BookingRoutingModule } from './booking-routing.module';
 import { BookingComponent } from './booking.component';
@@ -27,8 +31,11 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatNativeDateModule,
     MatButtonModule,
     MatExpansionModule,
-    MatIconModule
-    
+    MatIconModule,
+    MatCheckboxModule,
+    HttpClientModule,
+    MatDialogModule,
+    // MatSnackBarModule
   ]
 })
 export class BookingModule { }
